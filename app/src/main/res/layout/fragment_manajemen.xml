@@ -110,14 +110,16 @@
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
+
         <Button
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/cdManajemen3"
+            android:id="@+id/btn_logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/cdManajemen3"
+            android:layout_marginTop="20dp"
             android:background="@drawable/button_background"
-            android:textColor="@color/White"
-            android:text="Logout"/>
+            android:text="Logout"
+            android:textColor="@color/White" />
 
     </RelativeLayout>
 
