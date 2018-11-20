@@ -11,13 +11,18 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.appus.splash.Splash;
 import com.macbook.puritomat.R;
 import com.macbook.puritomat.fragment.HomeFragment;
 import com.macbook.puritomat.fragment.ManajemenFragment;
 import com.macbook.puritomat.fragment.TransaksiFragment;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
@@ -49,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         initializeSP();
 
@@ -112,5 +118,20 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return false;
     }
 
+    @OnClick({R.id.menu_item_check_in,R.id.menu_item_reservasi})
+    public void floatingClick(View view){
+        switch (view.getId()) {
+            case R.id.menu_item_check_in:
+                // do something
+                Intent intent = new Intent(this,ScanningActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.menu_item_reservasi:
+                // do something else
+                Toast.makeText(view.getContext(), "2", Toast.LENGTH_SHORT).show();
+                break;
+
+        }
+    }
 
 }
