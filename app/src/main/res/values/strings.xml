@@ -3,6 +3,10 @@
     <string name="title_home">Home</string>
     <string name="title_manajemen">Manajemen</string>
     <string name="title_transaksi">Transaksi</string>
+    <string name="title_data_kamar">List Data Kamar</string>
+    <string name="title_data_menu">List Data Menu</string>
+    <string name="title_data_laundry">List Data Laundry</string>
+    <string name="title_data_others">List Data Others</string>
 
     <!--string for home-->
     <string name="home_1">Terisi</string>
@@ -11,8 +15,9 @@
 
     <!--string for manajemen-->
     <string name="manajemen_1">Data Kamar</string>
-    <string name="manajemen_2">Data Service</string>
-    <string name="manajemen_3">Data Pelanggan</string>
+    <string name="manajemen_2">Data Menu</string>
+    <string name="manajemen_3">Data Laundry</string>
+    <string name="manajemen_4">Data yang Lain</string>
 
     <!--string for scanning-->
     <string name="et_scanning1">Nama Lengkap</string>

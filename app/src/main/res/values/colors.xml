@@ -3,7 +3,7 @@
     <!--Base Color-->
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#ff4081</color>
 
     <!--Login Color-->
     <color name="colorPrimaryLogin">#2C273C</color>
@@ -102,7 +102,7 @@
     <color name="DarkRed">#8B0000</color>
     <color name="BlueViolet">#8A2BE2</color>
     <color name="LightSkyBlue">#87CEFA</color>
-    <color name="SkyBlue">#87CEEB</color>
+    <color name="SkyBlue">#87ceeb</color>
     <color name="Gray">#808080</color>
     <color name="Olive">#808000</color>
     <color name="Purple">#800080</color>
@@ -123,7 +123,7 @@
     <color name="Indigo">#4B0082</color>
     <color name="MediumTurquoise">#48D1CC</color>
     <color name="DarkSlateBlue">#483D8B</color>
-    <color name="SteelBlue">#4682B4</color>
+    <color name="SteelBlue">#4682b4</color>
     <color name="RoyalBlue">#4169E1</color>
     <color name="Turquoise">#40E0D0</color>
     <color name="MediumSeaGreen">#3CB371</color>

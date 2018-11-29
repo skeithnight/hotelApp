@@ -1,6 +1,7 @@
 package com.macbook.puritomat.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.macbook.puritomat.R;
+import com.macbook.puritomat.activity.ListDataManajemenActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,7 +23,7 @@ import butterknife.OnClick;
  */
 public class ManajemenFragment extends Fragment {
 
-    private View view;
+    private View mview;
     @BindView(R.id.judul_fragment)
     TextView tvJudulFragment;
 
@@ -35,11 +37,11 @@ public class ManajemenFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_manajemen, container, false);
-        ButterKnife.bind(this,view);
+        mview = inflater.inflate(R.layout.fragment_manajemen, container, false);
+        ButterKnife.bind(this,mview);
         tvJudulFragment.setText("Manajemen");
 
-        return view;
+        return mview;
     }
 
     @OnClick({R.id.cdManajemen1,R.id.cdManajemen2,R.id.cdManajemen3,R.id.btn_logout})
@@ -47,7 +49,11 @@ public class ManajemenFragment extends Fragment {
         switch (view.getId()) {
             case R.id.cdManajemen1:
                 // do something
-                Toast.makeText(view.getContext(), "1", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(view.getContext(), "1", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mview.getContext(), ListDataManajemenActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("menu","kamar");
+                startActivity(intent);
                 break;
             case R.id.cdManajemen2:
                 // do something else
