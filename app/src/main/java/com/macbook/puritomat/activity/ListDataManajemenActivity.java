@@ -1,5 +1,6 @@
 package com.macbook.puritomat.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,13 +24,13 @@ public class ListDataManajemenActivity extends AppCompatActivity {
             menu= null;
         } else {
             menu= extras.getString("menu");
-            if (menu == "kamar"){
+            if (menu.equals(getString(R.string.manajemen_1))){
                 setTitle(R.string.title_data_kamar);
-            }else if (menu == "menu"){
+            }else if (menu.equals(getString(R.string.manajemen_2))){
                 setTitle(R.string.title_data_menu);
-            }else if (menu == "laundry"){
+            }else if (menu.equals(getString(R.string.manajemen_3))){
                 setTitle(R.string.title_data_laundry);
-            }else if (menu == "others"){
+            }else if (menu.equals(getString(R.string.manajemen_4))){
                 setTitle(R.string.title_data_others);
             }
         }
@@ -37,6 +38,11 @@ public class ListDataManajemenActivity extends AppCompatActivity {
 
     @OnClick(R.id.fab_listDataManajemen)
     public void onClickFAB(View view){
-        Toast.makeText(this, String.valueOf(view.getId())+" : "+menu, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, DetailDataActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("menu",menu);
+        intent.putExtra("typeDetail",getString(R.string.tambah_data));
+        startActivity(intent);
+//        Toast.makeText(this, String.valueOf(view.getId())+" : "+menu, Toast.LENGTH_SHORT).show();
     }
 }

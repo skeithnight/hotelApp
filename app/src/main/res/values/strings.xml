@@ -7,6 +7,10 @@
     <string name="title_data_menu">List Data Menu</string>
     <string name="title_data_laundry">List Data Laundry</string>
     <string name="title_data_others">List Data Others</string>
+    <string name="tambah_data">Tambah</string>
+
+    <!--Spinner-->
+    <string name="spinner_category">Select Category</string>
 
     <!--string for home-->
     <string name="home_1">Terisi</string>
@@ -25,6 +29,18 @@
     <string name="et_scanning3">Tempat, tanggal lahir</string>
     <string name="et_scanning4">Jenis Kelamin</string>
 
+    <!--string for title dialog-->
+    <string name="dialog_title_success">Success</string>
+    <string name="dialog_title_failed">Failed</string>
+    <string name="dialog_title_information">Information</string>
+
+    <!--string for message dialog-->
+    <string name="dialog_message_1">Sukses menyimpan data</string>
+    <string name="dialog_message_2">Gagal menyimpan data</string>
+    <string name="dialog_message_3">Apakah anda yakin akan menghapus data ini?</string>
+    <string name="dialog_message_4">Data tidak boleh kosong</string>
+    <string name="dialog_message_5">Server sedang mengalami masalah.</string>
+    <string name="dialog_message_6">Username atau password salah</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

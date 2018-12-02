@@ -1,7 +1,9 @@
 package com.macbook.puritomat.fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -13,6 +15,7 @@ import android.widget.Toast;
 
 import com.macbook.puritomat.R;
 import com.macbook.puritomat.activity.ListDataManajemenActivity;
+import com.macbook.puritomat.activity.LoginActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,30 +47,45 @@ public class ManajemenFragment extends Fragment {
         return mview;
     }
 
-    @OnClick({R.id.cdManajemen1,R.id.cdManajemen2,R.id.cdManajemen3,R.id.btn_logout})
+    @OnClick({R.id.cdManajemen1,R.id.cdManajemen2,R.id.cdManajemen3,R.id.cdManajemen4,R.id.btn_logout})
     public void clickCV(View view){
         switch (view.getId()) {
             case R.id.cdManajemen1:
                 // do something
 //                Toast.makeText(view.getContext(), "1", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(mview.getContext(), ListDataManajemenActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("menu","kamar");
-                startActivity(intent);
+                goToListDataManajemen(getString(R.string.manajemen_1));
                 break;
             case R.id.cdManajemen2:
                 // do something else
-                Toast.makeText(view.getContext(), "2", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(view.getContext(), "2", Toast.LENGTH_SHORT).show();
+                goToListDataManajemen(getString(R.string.manajemen_2));
                 break;
             case R.id.cdManajemen3:
                 // i'm lazy, do nothing
-                Toast.makeText(view.getContext(), "3", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(view.getContext(), "3", Toast.LENGTH_SHORT).show();
+                goToListDataManajemen(getString(R.string.manajemen_3));
+                break;
+            case R.id.cdManajemen4:
+                // i'm lazy, do nothing
+//                Toast.makeText(view.getContext(), "3", Toast.LENGTH_SHORT).show();
+                goToListDataManajemen(getString(R.string.manajemen_4));
                 break;
             case R.id.btn_logout:
                 // i'm lazy, do nothing
-                Toast.makeText(view.getContext(), "logout", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mview.getContext(), LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
+                sharedPreferences.edit().clear();
                 break;
 
         }
+    }
+
+    private void goToListDataManajemen(String menu) {
+        Intent intent = new Intent(mview.getContext(), ListDataManajemenActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("menu",menu);
+        startActivity(intent);
     }
 }

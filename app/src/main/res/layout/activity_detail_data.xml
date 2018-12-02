@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.DetailDataActivity">
+
+    <RelativeLayout
+        android:layout_above="@+id/btn_simpan_data"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ViewStub
+            android:layout_centerInParent="true"
+            android:id="@+id/VS_detail_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_simpan_data_manajemen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/Green"
+        android:text="Save"
+        android:textAllCaps="false"
+        android:textColor="@color/White"
+        android:textSize="21sp" />
+</RelativeLayout>

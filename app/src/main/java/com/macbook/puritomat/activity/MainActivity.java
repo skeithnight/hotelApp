@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-//                CheckLogin();
+                CheckLogin();
             }
         }, 3000);
 
