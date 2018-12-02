@@ -51,6 +51,7 @@
                     android:id="@+id/et_nomor_kamar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="number"
                     android:hint="Nomor Kamar" />
 
             </android.support.design.widget.TextInputLayout>

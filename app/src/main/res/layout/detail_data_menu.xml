@@ -44,6 +44,7 @@
                 android:id="@+id/et_harga_menu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="number"
                 android:drawablePadding="10dp"
                 android:hint="Harga" />
 

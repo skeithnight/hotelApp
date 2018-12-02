@@ -17,15 +17,24 @@ import android.widget.Toast;
 
 import com.appus.splash.Splash;
 import com.macbook.puritomat.R;
+import com.macbook.puritomat.TampilDialog;
+import com.macbook.puritomat.api.APIClient;
+import com.macbook.puritomat.api.LoginService;
 import com.macbook.puritomat.fragment.HomeFragment;
 import com.macbook.puritomat.fragment.ManajemenFragment;
 import com.macbook.puritomat.fragment.TransaksiFragment;
+import com.macbook.puritomat.model.Resepsionis;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
 
+    static String TAG = "Testing";
+    private TampilDialog tampilDialog;
 //    SharedPreferences
     SharedPreferences mSPLogin;
 
@@ -56,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        tampilDialog = new TampilDialog(this);
+
         initializeSP();
 
 //        load home fragment
@@ -64,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //        starting splash screen
         startSplashScreen();
 
+//        Check Login
+        CheckLogin();
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
 
@@ -71,8 +85,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     private void initializeSP() {
          mSPLogin = getSharedPreferences("Login", Context.MODE_PRIVATE);
-         SharedPreferences.Editor editor = mSPLogin.edit();
-         editor.clear();
     }
 
     //    to start splash screen
@@ -82,26 +94,42 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         splash.setSplashImage(getDrawable(R.drawable.logo));
         splash.setOneShotStart(true);
         splash.perform();
-//        CheckLogin();
-
-//        after splash execute routing login
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                CheckLogin();
-            }
-        }, 3000);
-
     }
 
 //    ini function untuk check apakah token user sudah expired atau belum.
     private void CheckLogin() {
+        tampilDialog.showLoading();
         String token = mSPLogin.getString("token",null);
-        Log.i("testing", "CheckLogin: "+ token);
+//        Log.i(TAG, "CheckLogin: "+ token);
         if (token == null){
+            tampilDialog.dismissLoading();
             Intent intent = new Intent(this,LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
+        }else {
+            LoginService loginService = APIClient.getClient().create(LoginService.class);
+            loginService.getCheckLogin("Bearer "+token).enqueue(new Callback<Resepsionis>() {
+                @Override
+                public void onResponse(Call<Resepsionis> call, Response<Resepsionis> response) {
+                    tampilDialog.dismissLoading();
+                    if (!response.isSuccessful()){
+                        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Resepsionis> call, Throwable t) {
+                    Log.i(TAG, "onFailure: "+t.getMessage());
+                    Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }
+            });
         }
     }
 

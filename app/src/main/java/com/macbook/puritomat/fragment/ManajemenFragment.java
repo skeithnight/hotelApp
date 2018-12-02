@@ -73,10 +73,10 @@ public class ManajemenFragment extends Fragment {
             case R.id.btn_logout:
                 // i'm lazy, do nothing
                 Intent intent = new Intent(mview.getContext(), LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 SharedPreferences sharedPreferences = getActivity().getSharedPreferences("Login", Context.MODE_PRIVATE);
-                sharedPreferences.edit().clear();
+                sharedPreferences.edit().clear().commit();
                 break;
 
         }

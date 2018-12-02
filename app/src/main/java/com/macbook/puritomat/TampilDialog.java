@@ -1,5 +1,6 @@
 package com.macbook.puritomat;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
@@ -7,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 
 public class TampilDialog {
     Context mcontext;
+    ProgressDialog progressDialog;
 
     public TampilDialog(Context mcontext) {
         this.mcontext = mcontext;
@@ -39,5 +41,16 @@ public class TampilDialog {
             builder.setIcon(R.drawable.ic_check_circle_black_24dp);
         }
         builder.show();
+    }
+
+    public void showLoading(){
+        progressDialog = new ProgressDialog(mcontext);
+        progressDialog.setMessage("Its loading....");
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
+    }
+
+    public void dismissLoading(){
+        progressDialog.dismiss();
     }
 }

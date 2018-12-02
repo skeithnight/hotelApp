@@ -47,6 +47,7 @@
                 android:id="@+id/tx_harga_kamar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="number"
                 android:hint="Harga" />
 
         </android.support.design.widget.TextInputLayout>

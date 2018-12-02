@@ -24,10 +24,11 @@
     <string name="manajemen_4">Data yang Lain</string>
 
     <!--string for scanning-->
-    <string name="et_scanning1">Nama Lengkap</string>
-    <string name="et_scanning2">Alamat</string>
-    <string name="et_scanning3">Tempat, tanggal lahir</string>
-    <string name="et_scanning4">Jenis Kelamin</string>
+    <string name="et_scanning1">NIK</string>
+    <string name="et_scanning2">Nama Lengkap</string>
+    <string name="et_scanning3">Alamat</string>
+    <string name="et_scanning4">No Hp</string>
+    <string name="et_scanning5">Jumlah Kamar</string>
 
     <!--string for title dialog-->
     <string name="dialog_title_success">Success</string>

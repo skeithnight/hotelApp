@@ -17,6 +17,8 @@ import com.macbook.puritomat.R
 import com.macbook.puritomat.TampilDialog
 import com.macbook.puritomat.api.APIClient
 import com.macbook.puritomat.api.LoginService
+import com.macbook.puritomat.model.RequestLogin
+import com.macbook.puritomat.model.ResponseLogin
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -44,16 +46,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     TampilDialog(this@LoginActivity).showDialog(getString(R.string.dialog_title_failed),getString(R.string.dialog_message_4))
                 }else {
                     getToken()
-//                    val mSPLogin = getSharedPreferences("Login", Context.MODE_PRIVATE)
-//                    val editor = mSPLogin.edit()
-//
-//                    editor.putString(et_username_login.text.toString(), "userKos")
-//                    editor.putString(et_password_login.text.toString(), "pasKos")
-//                    editor.putString("token", "tokenKos")
-//                    editor.commit()
-//
-//                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-//                    startActivity(intent)
                 }
 
             }
@@ -61,27 +53,36 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun getToken() {
-        val retrofit: Retrofit = APIClient.getClient()
-        val service: LoginService = retrofit.create(LoginService::class.java)
+//        val retrofit: Retrofit = APIClient.getClient().create(LoginService::class.java)
+        val service = APIClient.getClient().create(LoginService::class.java)
         val gson = Gson()
 
-        val requestLogin:Map<String,String> = HashMap(hashMapOf("username" to et_username_login.text.toString(),"password" to et_password_login.text.toString()))
+//        val requestLogin:Map<String,String> = HashMap(hashMapOf("username" to et_username_login.text.toString(),"password" to et_password_login.text.toString()))
+        val requestLogin:RequestLogin = RequestLogin(et_username_login.text.toString(),et_password_login.text.toString())
 //        Log.i(TAG,gson.toJson(requestLogin))
-        service.postKontak(requestLogin).enqueue(object : Callback<Map<String,String>>{
-            override fun onResponse(call: Call<Map<String, String>>?, response: Response<Map<String, String>>?) {
-
-                Log.i(TAG,gson.toJson(response))
-//                if (response.isSuccessful) {
-//                    val data = response.body()
-//                    Log.i(TAG,gson.toJson(response))
-//                }else{
-//                    TampilDialog(this@LoginActivity).showDialog(getString(R.string.dialog_title_failed),getString(R.string.dialog_message_6))
-//                }
-            }
-
-            override fun onFailure(call: Call<Map<String, String>>?, t: Throwable?) {
+        service.postLogin(requestLogin).enqueue(object : Callback<ResponseLogin>{
+            override fun onFailure(call: Call<ResponseLogin>?, t: Throwable?) {
                 TampilDialog(this@LoginActivity).showDialog(getString(R.string.dialog_title_failed),t.toString())
             }
+
+            override fun onResponse(call: Call<ResponseLogin>?, response: Response<ResponseLogin>?) {
+                if (response != null) {
+                    if (response.isSuccessful) {
+                        val responseLogin: ResponseLogin = response.body()
+                        val mSPLogin:SharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE)
+                        val editor = mSPLogin.edit()
+
+                        editor.putString("token", responseLogin.token)
+                        editor.commit()
+
+                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        startActivity(intent)
+                    }else{
+                        TampilDialog(this@LoginActivity).showDialog(getString(R.string.dialog_title_failed),getString(R.string.dialog_message_6))
+                    }
+                }
+            }
+
         })
     }
 
