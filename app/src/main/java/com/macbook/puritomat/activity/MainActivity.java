@@ -31,11 +31,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     static String TAG = "Testing";
     private TampilDialog tampilDialog;
-//    SharedPreferences
+    //    SharedPreferences
     SharedPreferences mSPLogin;
 
 
@@ -84,11 +84,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     private void initializeSP() {
-         mSPLogin = getSharedPreferences("Login", Context.MODE_PRIVATE);
+        mSPLogin = getSharedPreferences("Login", Context.MODE_PRIVATE);
     }
 
     //    to start splash screen
-    public void startSplashScreen(){
+    public void startSplashScreen() {
         Splash.Builder splash = new Splash.Builder(MainActivity.this, getSupportActionBar());
         splash.setBackgroundColor(getResources().getColor(R.color.Aquamarine));
         splash.setSplashImage(getDrawable(R.drawable.logo));
@@ -96,25 +96,25 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         splash.perform();
     }
 
-//    ini function untuk check apakah token user sudah expired atau belum.
+    //    ini function untuk check apakah token user sudah expired atau belum.
     private void CheckLogin() {
         tampilDialog.showLoading();
-        String token = mSPLogin.getString("token",null);
+        String token = mSPLogin.getString("token", null);
 //        Log.i(TAG, "CheckLogin: "+ token);
-        if (token == null){
+        if (token == null) {
             tampilDialog.dismissLoading();
-            Intent intent = new Intent(this,LoginActivity.class);
+            Intent intent = new Intent(this, LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
-        }else {
+        } else {
             LoginService loginService = APIClient.getClient().create(LoginService.class);
-            loginService.getCheckLogin("Bearer "+token).enqueue(new Callback<Resepsionis>() {
+            loginService.getCheckLogin("Bearer " + token).enqueue(new Callback<Resepsionis>() {
                 @Override
                 public void onResponse(Call<Resepsionis> call, Response<Resepsionis> response) {
                     tampilDialog.dismissLoading();
-                    if (!response.isSuccessful()){
-                        Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                    if (!response.isSuccessful()) {
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
@@ -123,8 +123,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
                 @Override
                 public void onFailure(Call<Resepsionis> call, Throwable t) {
-                    Log.i(TAG, "onFailure: "+t.getMessage());
-                    Intent intent = new Intent(MainActivity.this,LoginActivity.class);
+                    Log.i(TAG, "onFailure: " + t.getMessage());
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         }
     }
 
-//    ini function untuk meload fragment
+    //    ini function untuk meload fragment
     private boolean loadFragment(Fragment fragment) {
         //switching fragment
         if (fragment != null) {
@@ -146,17 +146,18 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         return false;
     }
 
-    @OnClick({R.id.menu_item_check_in,R.id.menu_item_reservasi})
-    public void floatingClick(View view){
+    @OnClick({R.id.menu_item_check_in, R.id.menu_item_reservasi})
+    public void floatingClick(View view) {
         switch (view.getId()) {
             case R.id.menu_item_check_in:
                 // do something
-                Intent intent = new Intent(this,ScanningActivity.class);
+                Intent intent = new Intent(this, ScanningActivity.class);
                 startActivity(intent);
                 break;
             case R.id.menu_item_reservasi:
                 // do something else
-                Toast.makeText(view.getContext(), "2", Toast.LENGTH_SHORT).show();
+                Intent intent1 = new Intent(this, ReservationActivity.class);
+                startActivity(intent1);
                 break;
 
         }

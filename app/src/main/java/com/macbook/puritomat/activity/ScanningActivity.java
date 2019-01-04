@@ -85,7 +85,7 @@ public class ScanningActivity extends AppCompatActivity {
         getDataKamar();
 
         //        Blink ID
-        MicroblinkSDK.setLicenseFile("MB_com.macbook.puritomat_BlinkID_Android_2018-12-16.mblic", this);
+        MicroblinkSDK.setLicenseFile("MB_com.macbook.puritomat_BlinkID_Android_2019-02-03.mblic", this);
         // create MrtdRecognizer
         mRecognizer = new MrtdRecognizer();
 

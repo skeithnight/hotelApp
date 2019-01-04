@@ -24,11 +24,14 @@
         <activity
             android:name=".activity.LoginActivity"
             android:theme="@style/LoginTheme" />
-        <activity android:name=".activity.ScanningActivity" />
+        <activity android:name=".activity.ScanningActivity"
+            android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.ListDataManajemenActivity"
             android:parentActivityName=".activity.MainActivity" />
-        <activity android:name=".activity.DetailDataActivity"></activity>
+        <activity android:name=".activity.DetailDataActivity" />
+        <activity android:name=".activity.ReservationActivity"
+            android:parentActivityName=".activity.MainActivity"/>
     </application>
 
 </manifest>
