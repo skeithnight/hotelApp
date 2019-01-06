@@ -68,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         tampilDialog = new TampilDialog(this);
 
         initializeSP();
+        
+//        Check Login
+        CheckLogin();
 
 //        load home fragment
         loadFragment(new HomeFragment());
@@ -75,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 //        starting splash screen
         startSplashScreen();
 
-//        Check Login
-        CheckLogin();
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(this);
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             startActivity(intent);
             finish();
         } else {
+            Log.i(TAG, "CheckLogin: cek");
             LoginService loginService = APIClient.getClient().create(LoginService.class);
             loginService.getCheckLogin("Bearer " + token).enqueue(new Callback<Resepsionis>() {
                 @Override

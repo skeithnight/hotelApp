@@ -2,11 +2,15 @@ package com.macbook.puritomat.adapter;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.macbook.puritomat.R;
 import com.macbook.puritomat.model.Kamar;
@@ -17,16 +21,22 @@ import java.util.HashMap;
 import java.util.List;
 
 public class ExpandableListAdapterKamar extends BaseExpandableListAdapter {
+    private static String TAG = "Testing";
+
     private Context _context;
     private ArrayList<TipeKamar> _listDataHeader; // header titles
     // child data in format of header title, child title
     private HashMap<String, ArrayList<Kamar>> _listDataChild;
+    private String level;
+    private SparseBooleanArray mSelectedItemsIds;
 
     public ExpandableListAdapterKamar(Context context, ArrayList<TipeKamar> listDataHeader,
-                                 HashMap<String, ArrayList<Kamar>> listChildData) {
+                                 HashMap<String, ArrayList<Kamar>> listChildData, String level) {
         this._context = context;
         this._listDataHeader = listDataHeader;
         this._listDataChild = listChildData;
+        this.level = level;
+        this.mSelectedItemsIds = new SparseBooleanArray();
     }
 
     @Override
@@ -41,7 +51,7 @@ public class ExpandableListAdapterKamar extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, final int childPosition,
+    public View getChildView(final int groupPosition, final int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
 
         final String nomorKamar = (String) String.valueOf(getChild(groupPosition, childPosition).getNomor());
@@ -55,18 +65,49 @@ public class ExpandableListAdapterKamar extends BaseExpandableListAdapter {
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) this._context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = infalInflater.inflate(R.layout.list_item_kamar, null);
+            if (level == "regis") {
+                convertView = infalInflater.inflate(R.layout.list_kamar_registrasi, null);
+                CheckBox checkBox = (CheckBox) convertView.findViewById(R.id.cb_pilih_kamar);
+                checkBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int position = Integer.parseInt(String.format("3%d%d",groupPosition,childPosition));
+                        checkCheckBox(position, !mSelectedItemsIds.get(position));
+                    }
+                });
+            }else {
+                convertView = infalInflater.inflate(R.layout.list_item_kamar, null);
+                TextView txtStatusKamar = (TextView) convertView
+                        .findViewById(R.id.tx_status_kamar);
+                txtStatusKamar.setText(statusKamar);
+            }
         }
 
         TextView txtNomorKamar = (TextView) convertView
                 .findViewById(R.id.tx_nomor_kamar);
-        TextView txtStatusKamar = (TextView) convertView
-                .findViewById(R.id.tx_status_kamar);
-
         txtNomorKamar.setText("Kamar "+nomorKamar);
-        txtStatusKamar.setText(statusKamar);
         return convertView;
     }
+
+    /**
+     * Check the Checkbox if not checked
+     **/
+    public void checkCheckBox(int position, boolean value) {
+        if (value)
+            mSelectedItemsIds.put(position, true);
+        else
+            mSelectedItemsIds.delete(position);
+
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Return the selected Checkbox IDs
+     **/
+    public SparseBooleanArray getSelectedIds() {
+        return mSelectedItemsIds;
+    }
+
 
     @Override
     public int getChildrenCount(int groupPosition) {

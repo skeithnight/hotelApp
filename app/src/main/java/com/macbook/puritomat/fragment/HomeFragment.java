@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.macbook.puritomat.R;
 import com.macbook.puritomat.TampilDialog;
@@ -84,7 +85,11 @@ public class HomeFragment extends Fragment {
                 // get Data Kamar
                 ArrayList<Kamar> kamars = new ArrayList<>();
                 kamars = response.body();
-                tx_terisi.setText(String.valueOf(kamars.size()));
+                try {
+                    tx_terisi.setText(String.valueOf(kamars.size()));
+                }catch (Exception e){
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
 
             }
 
@@ -106,7 +111,11 @@ public class HomeFragment extends Fragment {
                 // get Data Kamar
                 ArrayList<Kamar> kamars = new ArrayList<>();
                 kamars = response.body();
-                tx_kosong.setText(String.valueOf(kamars.size()));
+                try {
+                    tx_kosong.setText(String.valueOf(kamars.size()));
+                }catch (Exception e){
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
 
             }
 

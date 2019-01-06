@@ -153,7 +153,7 @@ public class ListDataManajemenActivity extends AppCompatActivity {
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.exp_list_data_tipe_kamar);
         expListView.setVisibility(View.VISIBLE);
-        listAdapter = new ExpandableListAdapterKamar(ListDataManajemenActivity.this, listDataHeader, listDataChild);
+        listAdapter = new ExpandableListAdapterKamar(ListDataManajemenActivity.this, listDataHeader, listDataChild,"");
 
         // setting list adapter
         expListView.setAdapter(listAdapter);
