@@ -26,8 +26,13 @@ import com.macbook.puritomat.TampilDialog;
 import com.macbook.puritomat.adapter.ExpandableListAdapterKamar;
 import com.macbook.puritomat.api.APIClient;
 import com.macbook.puritomat.api.DataKamarService;
+import com.macbook.puritomat.api.DataTransaksiService;
+import com.macbook.puritomat.model.DetailTransaksi;
 import com.macbook.puritomat.model.Kamar;
+import com.macbook.puritomat.model.Resepsionis;
+import com.macbook.puritomat.model.Tamu;
 import com.macbook.puritomat.model.TipeKamar;
+import com.macbook.puritomat.model.Transaksi;
 import com.microblink.MicroblinkSDK;
 import com.microblink.activity.DocumentScanActivity;
 import com.microblink.entities.recognizers.Recognizer;
@@ -39,10 +44,12 @@ import com.microblink.uisettings.DocumentUISettings;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,7 +72,7 @@ public class ScanningActivity extends AppCompatActivity {
     @BindView(R.id.et_scanning4)
     EditText et_no_hp;
 
-//    Exp list kamar
+    //    Exp list kamar
     ExpandableListAdapterKamar listAdapter;
     ExpandableListView expListView;
     ArrayList<TipeKamar> listDataHeader;
@@ -103,15 +110,16 @@ public class ScanningActivity extends AppCompatActivity {
         // bundle recognizers into RecognizerBundle
         mRecognizerBundle = new RecognizerBundle(mIndonesiaIdFrontRecognizer);
     }
+
     private void initializeSP() {
         mSPLogin = getSharedPreferences("Login", Context.MODE_PRIVATE);
-        token = mSPLogin.getString("token",null);
+        token = mSPLogin.getString("token", null);
     }
 
     private void getDataTipeKamar() {
-        if (token != null){
+        if (token != null) {
             DataKamarService dataKamarService = APIClient.getClient().create(DataKamarService.class);
-            dataKamarService.getListDataTipeKamar("Bearer "+token).enqueue(new Callback<ArrayList<TipeKamar>>() {
+            dataKamarService.getListDataTipeKamar("Bearer " + token).enqueue(new Callback<ArrayList<TipeKamar>>() {
 
                 @Override
                 public void onResponse(Call<ArrayList<TipeKamar>> call, Response<ArrayList<TipeKamar>> response) {
@@ -125,16 +133,16 @@ public class ScanningActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<ArrayList<TipeKamar>> call, Throwable t) {
                     tampilDialog.dismissLoading();
-                    tampilDialog.showDialog(getString(R.string.dialog_title_failed),t.getMessage());
+                    tampilDialog.showDialog(getString(R.string.dialog_title_failed), t.getMessage());
                 }
             });
         }
     }
 
     private void getDataKamar() {
-        if (token != null){
+        if (token != null) {
             DataKamarService dataKamarService = APIClient.getClient().create(DataKamarService.class);
-            dataKamarService.getListDataKamar("Bearer "+token).enqueue(new Callback<ArrayList<Kamar>>() {
+            dataKamarService.getListDataKamar("Bearer " + token).enqueue(new Callback<ArrayList<Kamar>>() {
                 @Override
                 public void onResponse(Call<ArrayList<Kamar>> call, Response<ArrayList<Kamar>> response) {
                     tampilDialog.dismissLoading();
@@ -144,7 +152,7 @@ public class ScanningActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<ArrayList<Kamar>> call, Throwable t) {
                     tampilDialog.dismissLoading();
-                    tampilDialog.showDialog(getString(R.string.dialog_title_failed),t.getMessage());
+                    tampilDialog.showDialog(getString(R.string.dialog_title_failed), t.getMessage());
                 }
             });
         }
@@ -162,7 +170,7 @@ public class ScanningActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.btn_scanning)
-    public void click(){
+    public void click() {
         startScanning();
     }
 
@@ -189,52 +197,88 @@ public class ScanningActivity extends AppCompatActivity {
                     et_nama.setText(result.getName());
                     et_alamat.setText(result.getAddress());
 
-                }else {
-                    tampilDialog.showDialog(getString(R.string.dialog_title_failed),getString(R.string.dialog_message_5));
+                } else {
+                    tampilDialog.showDialog(getString(R.string.dialog_title_failed), getString(R.string.dialog_message_5));
                 }
             }
         }
     }
 
-    @OnClick(R.id.btn_check_in)
-    public void submit(){
-        SparseBooleanArray selectedRows = listAdapter.getSelectedIds();
-        if (selectedRows.size() > 0) {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i < selectedRows.size(); i++) {
-//                Log.i(TAG, "submit: "+selectedRows.keyAt(i));
-//                int groupPosition = Integer.parseInt(StringUtils.);
-//                int childPosititon = Integer.parseInt(String.valueOf(selectedRows.keyAt(i)).substring(2,1));
-//                Log.i(TAG, "submit: "+groupPosition+" : "+childPosititon);
-//                Kamar kamar = listDataChild.get(listDataHeader.get(groupPosition).getId())
-//                        .get(childPosititon);
-//                Gson gson = new Gson();
-//                Log.i(TAG, "submit: "+gson.toJson(kamar));
+    SparseBooleanArray selectedRows;
 
-                //                if (selectedRows.valueAt(i)) {
-////                    String selectedRowLabel = l.get(selectedRows.keyAt(i));
-//                    stringBuilder.append(String.valueOf(selectedRows.keyAt(i)) + "\n");
-//                }
-            }
-//            Toast.makeText(this, "Selected Rows\n" + stringBuilder.toString(), Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(this, String.valueOf(Integer.parseInt(String.format("%d%d",1,2))), Toast.LENGTH_SHORT).show();
+    @OnClick(R.id.btn_check_in)
+    public void submit() {
+        selectedRows = listAdapter.getSelectedIds();
+        if (!validasiInputan()) {
+            tampilDialog.showDialog(getString(R.string.dialog_title_failed), getString(R.string.dialog_message_4));
+        } else {
+            insertTamu();
         }
-//        if (validasiInputan()){
-//            tampilDialog.showDialog(getString(R.string.dialog_title_failed), getString(R.string.dialog_message_4));
-//        }else {
-//
-//            Log.i(TAG, "submit: ");
-//        Toast.makeText(this, "woi", Toast.LENGTH_SHORT).show();
-//        }
     }
 
-    private Boolean validasiInputan(){
+    private void insertTamu() {
+        Tamu tamu = new Tamu(et_nik.getText().toString(), et_nama.getText().toString(), et_alamat.getText().toString(), et_no_hp.getText().toString());
+        DataTransaksiService dataTransaksiService = APIClient.getClient().create(DataTransaksiService.class);
+        dataTransaksiService.postTamu("Bearer " + token, tamu).enqueue(new Callback<Tamu>() {
+            @Override
+            public void onResponse(Call<Tamu> call, Response<Tamu> response) {
+                if (response.isSuccessful()) {
+                    insertTransaksi(response.body());
+                } else {
+                    tampilDialog.showDialog(getString(R.string.dialog_title_failed), getString(R.string.dialog_message_2));
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Tamu> call, Throwable t) {
+                tampilDialog.showDialog(getString(R.string.dialog_title_failed), t.getMessage());
+            }
+        });
+    }
+
+    private void insertTransaksi(Tamu body) {
+        List<DetailTransaksi<Kamar>> listDataKamar = new ArrayList<>();
+        for (int i = 0; i < selectedRows.size(); i++) {
+            String a = String.valueOf(selectedRows.keyAt(i));
+            int groupPosition = Integer.parseInt(a.substring(1, 2));
+            int childPosition = Integer.parseInt(a.substring(2, 3));
+            Kamar kamar = listDataChild.get(listDataHeader.get(groupPosition).getId())
+                    .get(childPosition);
+            DetailTransaksi<Kamar> detailTransaksi = new DetailTransaksi<>(kamar, System.currentTimeMillis(), 1);
+            listDataKamar.add(detailTransaksi);
+        }
+        Transaksi transaksi = new Transaksi(new Resepsionis("5bdfa84c3cd4ff24aba3cf00"), body, listDataKamar, "check-in");
+        DataTransaksiService dataTransaksiService = APIClient.getClient().create(DataTransaksiService.class);
+        dataTransaksiService.postTransaksi("Bearer " + token, transaksi).enqueue(new Callback<Transaksi>() {
+            @Override
+            public void onResponse(Call<Transaksi> call, Response<Transaksi> response) {
+                if (response.isSuccessful()) {
+                    tampilDialog.showDialog(getString(R.string.dialog_title_success), getString(R.string.dialog_message_1));
+                    Intent intent = new Intent(ScanningActivity.this, ListDataManajemenActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("menu",getString(R.string.manajemen_1));
+                    startActivity(intent);
+                } else {
+                    tampilDialog.showDialog(getString(R.string.dialog_title_failed), getString(R.string.dialog_message_2));
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Transaksi> call, Throwable t) {
+                tampilDialog.showDialog(getString(R.string.dialog_title_failed), t.getMessage());
+            }
+        });
+    }
+
+
+    private Boolean validasiInputan() {
         if (et_nik.getText().toString().equals("") || et_nama.getText().toString().equals("") || et_alamat.getText().toString().equals("") ||
-                et_no_hp.getText().toString().equals("") || mKamar == null){
-            return true;
-        }else {
+                et_no_hp.getText().toString().equals("") || selectedRows.size() == 0) {
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -243,19 +287,19 @@ public class ScanningActivity extends AppCompatActivity {
 
         listDataChild = new HashMap<String, ArrayList<Kamar>>();
 
-        for (TipeKamar tipekamar: listDataHeader) {
+        for (TipeKamar tipekamar : listDataHeader) {
             ArrayList<Kamar> kamarList = new ArrayList<Kamar>();
-            for (Kamar kamar:listDataKamar) {
-                if (kamar.getTipeKamar().getId().equals(tipekamar.getId())){
+            for (Kamar kamar : listDataKamar) {
+                if (kamar.getTipeKamar().getId().equals(tipekamar.getId())) {
                     kamarList.add(kamar);
-                    listDataChild.put(tipekamar.getId(),kamarList);
+                    listDataChild.put(tipekamar.getId(), kamarList);
                 }
             }
         }
         // get the listview
         expListView = (ExpandableListView) findViewById(R.id.exp_list_data_tipe_kamar);
         expListView.setVisibility(View.VISIBLE);
-        listAdapter = new ExpandableListAdapterKamar(this, listDataHeader, listDataChild,"regis");
+        listAdapter = new ExpandableListAdapterKamar(this, listDataHeader, listDataChild, "regis");
 
         // setting list adapter
         expListView.setAdapter(listAdapter);

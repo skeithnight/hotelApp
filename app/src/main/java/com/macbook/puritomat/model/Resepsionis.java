@@ -34,6 +34,13 @@ public class Resepsionis {
     @Expose
     private List<Authority> authorities = null;
 
+    public Resepsionis() {
+    }
+
+    public Resepsionis(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }
