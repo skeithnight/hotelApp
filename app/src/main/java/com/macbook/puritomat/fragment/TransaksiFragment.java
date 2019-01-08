@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,9 +16,13 @@ import android.view.ViewGroup;
 import com.google.gson.Gson;
 import com.macbook.puritomat.R;
 import com.macbook.puritomat.TampilDialog;
+import com.macbook.puritomat.activity.ListDataManajemenActivity;
+import com.macbook.puritomat.adapter.RecyclerViewAdapterLaundry;
+import com.macbook.puritomat.adapter.RecyclerViewAdapterTransaksi;
 import com.macbook.puritomat.api.APIClient;
 import com.macbook.puritomat.api.DataKamarService;
 import com.macbook.puritomat.api.DataTransaksiService;
+import com.macbook.puritomat.model.DataLaundry;
 import com.macbook.puritomat.model.TipeKamar;
 import com.macbook.puritomat.model.Transaksi;
 
@@ -68,6 +75,9 @@ public class TransaksiFragment extends Fragment {
         token = mSPLogin.getString("token", null);
     }
 
+    RecyclerView recyclerView;
+    private RecyclerViewAdapterTransaksi recyclerViewAdapterTransaksi;
+
     private void getDataTransaksi() {
         if (token != null) {
             DataTransaksiService dataTransaksiService = APIClient.getClient().create(DataTransaksiService.class);
@@ -78,6 +88,16 @@ public class TransaksiFragment extends Fragment {
                     tampilDialog.dismissLoading();
                     try {
                         transaksiArrayList = response.body();
+                        // initiate RecyclerView
+                        recyclerView = (RecyclerView) mView.findViewById(R.id.rv_list_data_transaksi);
+                        recyclerView.setVisibility(View.VISIBLE);
+
+                        recyclerViewAdapterTransaksi = new RecyclerViewAdapterTransaksi(transaksiArrayList);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mView.getContext());
+                        recyclerView.setLayoutManager(mLayoutManager);
+                        recyclerView.setItemAnimator(new DefaultItemAnimator());
+                        recyclerView.setAdapter(recyclerViewAdapterTransaksi);
+                        recyclerViewAdapterTransaksi.notifyDataSetChanged();
                     }catch (Exception e){
                         tampilDialog.showDialog(getString(R.string.dialog_title_failed), e.getMessage());
                     }
