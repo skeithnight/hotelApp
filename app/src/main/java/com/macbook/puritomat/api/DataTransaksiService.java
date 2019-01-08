@@ -21,6 +21,9 @@ public interface DataTransaksiService {
     @GET("kamar/filter/isi")
     Call<ArrayList<Kamar>> getlistKamarIsi(@Header("Authorization") String token);
 
+    @GET("transaksi")
+    Call<ArrayList<Transaksi>> getlistTransaksi(@Header("Authorization") String token);
+
     @POST("tamu")
     Call<Tamu> postTamu(@Header("Authorization") String token, @Body Tamu tamu);
 

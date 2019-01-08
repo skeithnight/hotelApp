@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAccent"
     tools:context=".activity.ScanningActivity">
 
 
@@ -19,6 +18,7 @@
                 android:id="@+id/cv1"
                 android:layout_margin="10dp"
                 app:cardCornerRadius="5dp"
+                app:cardElevation="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -28,10 +28,20 @@
                     android:layout_margin="10dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+                    <TextView
+                        android:layout_marginTop="16dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Identitas tamu"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
                     <Button
+                        android:layout_margin="10dp"
                         android:id="@+id/btn_scanning"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
+                        android:background="@android:color/holo_red_light"
+                        android:textColor="@color/White"
                         android:text="Scanning"
                         android:layout_centerHorizontal="true"/>
                     <android.support.design.widget.TextInputLayout
@@ -89,6 +99,7 @@
                 android:layout_below="@+id/cv1"
                 android:layout_margin="10dp"
                 app:cardCornerRadius="5dp"
+                app:cardElevation="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="300dp">
 
@@ -117,7 +128,7 @@
     </ScrollView>
     <Button
         android:layout_alignParentBottom="true"
-        android:background="@color/Green"
+        android:background="@android:color/holo_red_light"
         android:id="@+id/btn_check_in"
         android:layout_width="match_parent"
         android:layout_height="48dp"

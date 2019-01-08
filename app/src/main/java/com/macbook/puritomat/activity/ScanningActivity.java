@@ -212,6 +212,7 @@ public class ScanningActivity extends AppCompatActivity {
         if (!validasiInputan()) {
             tampilDialog.showDialog(getString(R.string.dialog_title_failed), getString(R.string.dialog_message_4));
         } else {
+            tampilDialog.showLoading();
             insertTamu();
         }
     }
@@ -254,8 +255,9 @@ public class ScanningActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Transaksi> call, Response<Transaksi> response) {
                 if (response.isSuccessful()) {
+                    tampilDialog.dismissLoading();
                     tampilDialog.showDialog(getString(R.string.dialog_title_success), getString(R.string.dialog_message_1));
-                    Intent intent = new Intent(ScanningActivity.this, ListDataManajemenActivity.class);
+                    Intent intent = new Intent(ScanningActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("menu",getString(R.string.manajemen_1));
                     startActivity(intent);
