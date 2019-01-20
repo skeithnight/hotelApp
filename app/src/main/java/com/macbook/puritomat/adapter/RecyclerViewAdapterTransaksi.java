@@ -1,5 +1,6 @@
 package com.macbook.puritomat.adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.macbook.puritomat.R;
+import com.macbook.puritomat.activity.CheckOutActivity;
 import com.macbook.puritomat.model.Transaksi;
 
 import java.util.ArrayList;
@@ -58,6 +60,10 @@ public class RecyclerViewAdapterTransaksi extends RecyclerView.Adapter<RecyclerV
         holder.cvTransaksi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(mView.getContext(), CheckOutActivity.class);
+                intent.putExtra("id",transaksi.getId());
+//                startActivity()
+
                 Toast.makeText(mView.getContext(), transaksi.getId(), Toast.LENGTH_SHORT).show();
             }
         });

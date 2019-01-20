@@ -24,16 +24,19 @@
         <activity
             android:name=".activity.LoginActivity"
             android:theme="@style/LoginTheme" />
-        <activity android:name=".activity.ScanningActivity"
+        <activity
+            android:name=".activity.ScanningActivity"
             android:label="Check In"
             android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.ListDataManajemenActivity"
             android:parentActivityName=".activity.MainActivity" />
         <activity android:name=".activity.DetailDataActivity" />
-        <activity android:name=".activity.ReservationActivity"
+        <activity
+            android:name=".activity.ReservationActivity"
             android:label="Reservasi"
-            android:parentActivityName=".activity.MainActivity"/>
+            android:parentActivityName=".activity.MainActivity" />
+        <activity android:name=".activity.CheckOutActivity"></activity>
     </application>
 
 </manifest>
