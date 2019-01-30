@@ -68,11 +68,13 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             override fun onResponse(call: Call<ResponseLogin>?, response: Response<ResponseLogin>?) {
                 if (response != null) {
                     if (response.isSuccessful) {
-                        val responseLogin: ResponseLogin = response.body()
+                        val responseLogin: ResponseLogin? = response.body()
                         val mSPLogin:SharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE)
                         val editor = mSPLogin.edit()
 
-                        editor.putString("token", responseLogin.token)
+                        if (responseLogin != null) {
+                            editor.putString("token", responseLogin.token)
+                        }
                         editor.commit()
 
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)

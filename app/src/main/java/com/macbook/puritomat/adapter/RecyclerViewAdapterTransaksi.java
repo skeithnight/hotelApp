@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.macbook.puritomat.R;
 import com.macbook.puritomat.activity.CheckOutActivity;
 import com.macbook.puritomat.model.Transaksi;
@@ -61,8 +62,9 @@ public class RecyclerViewAdapterTransaksi extends RecyclerView.Adapter<RecyclerV
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mView.getContext(), CheckOutActivity.class);
-                intent.putExtra("id",transaksi.getId());
-//                startActivity()
+                Gson gson = new Gson();
+                intent.putExtra("transaksi",gson.toJson(transaksi));
+                mView.getContext().startActivity(intent);
 
                 Toast.makeText(mView.getContext(), transaksi.getId(), Toast.LENGTH_SHORT).show();
             }

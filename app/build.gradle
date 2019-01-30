@@ -30,6 +30,9 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
 //    puriTomat
+    // For using the Midtrans Sandbox
+    implementation 'com.midtrans:uikit:1.21.2-SANDBOX'
+
 
     implementation('com.microblink:blinkid:4.2.0@aar') {
         transitive = true
