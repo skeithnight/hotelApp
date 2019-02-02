@@ -26,6 +26,13 @@ public class DataLaundry {
         this.deskripsi = deskripsi;
     }
 
+    public DataLaundry(String id, String nama, Integer harga, String deskripsi) {
+        this.id = id;
+        this.nama = nama;
+        this.harga = harga;
+        this.deskripsi = deskripsi;
+    }
+
     public String getId() {
         return id;
     }

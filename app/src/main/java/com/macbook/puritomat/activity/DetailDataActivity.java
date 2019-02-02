@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewStub;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import com.macbook.puritomat.model.TipeKamar;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.ResponseBody;
@@ -42,11 +44,19 @@ public class DetailDataActivity extends AppCompatActivity {
     String menu = "";
     String typeDetail = "";
     ViewStub stub = null;
+    Bundle extras;
     static String TAG = "Testing";
     private TampilDialog tampilDialog;
     //    SharedPreferences
     String token;
     SharedPreferences mSPLogin;
+    DataMenu dataMenu;
+    DataOthers dataOthers;
+    DataLaundry dataLaundry;
+    Kamar kamar;
+
+    @BindView(R.id.btn_hapus_data_manajemen)
+    Button btnHapus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +71,7 @@ public class DetailDataActivity extends AppCompatActivity {
 
         initializeSP();
 
-        Bundle extras = getIntent().getExtras();
+        extras = getIntent().getExtras();
         if(extras == null) {
             menu= null;
         } else {
@@ -79,8 +89,14 @@ public class DetailDataActivity extends AppCompatActivity {
     }
 
     private void setDetailDataCardView() {
+        Gson gson = new Gson();
         if (stub == null){
             stub = (ViewStub) findViewById(R.id.VS_detail_data);
+
+            if (typeDetail.equals("detail")){
+                btnHapus.setVisibility(View.VISIBLE);
+            }
+
             if (menu.equals(getString(R.string.manajemen_1))){
                 setTitle(typeDetail+" "+getString(R.string.manajemen_1));
                 stub.setLayoutResource(R.layout.detail_data_kamar);
@@ -90,16 +106,19 @@ public class DetailDataActivity extends AppCompatActivity {
                 setTitle(typeDetail+" "+getString(R.string.manajemen_2));
                 stub.setLayoutResource(R.layout.detail_data_menu);
                 View inflated = stub.inflate();
+                dataMenu = gson.fromJson(extras.getString("data"),DataMenu.class);
                 contentDataMenu();
             }else if (menu.equals(getString(R.string.manajemen_3))){
                 stub.setLayoutResource(R.layout.detail_data_laundry);
                 setTitle(typeDetail+" "+getString(R.string.manajemen_3));
                 View inflated = stub.inflate();
+                dataLaundry = gson.fromJson(extras.getString("data"),DataLaundry.class);
                 contentDataLaundry();
             }else if (menu.equals(getString(R.string.manajemen_4))){
                 stub.setLayoutResource(R.layout.detail_data_yang_lain);
                 setTitle(typeDetail+" "+getString(R.string.manajemen_4));
                 View inflated = stub.inflate();
+                dataOthers = gson.fromJson(extras.getString("data"),DataOthers.class);
                 contentDataOthers();
             }else {
                 Toast.makeText(this, "Failed to render", Toast.LENGTH_SHORT).show();
@@ -218,6 +237,11 @@ public class DetailDataActivity extends AppCompatActivity {
         namaMenu = (TextInputEditText) findViewById(R.id.et_nama_menu);
         hargaMenu = (TextInputEditText) findViewById(R.id.et_harga_menu);
         deskripsiMenu = (TextInputEditText) findViewById(R.id.et_deskripsi_menu);
+        if (typeDetail.equals("detail")){
+            namaMenu.setText(dataMenu.getNama());
+            hargaMenu.setText(String.valueOf(dataMenu.getHarga()));
+            deskripsiMenu.setText(dataMenu.getDeskripsi());
+        }
         tampilDialog.dismissLoading();
     }
     public boolean validasiDataMenu(){
@@ -228,17 +252,23 @@ public class DetailDataActivity extends AppCompatActivity {
         }
     }
     public void inputDataMenu(){
+        DataMenu dataMenu1;
+        Log.i(TAG, "inputDataMenu: woooi");
         if (validasiDataMenu()){
 //            kalau kosong muncul alert
             tampilDialog.showDialog(getString(R.string.dialog_title_failed),getString(R.string.dialog_message_4));
 //            Toast.makeText(this, "kosong", Toast.LENGTH_SHORT).show();
         }else {
 //            kalau tidak kosong maka lanjutkan input data
-            DataMenu dataMenu = new DataMenu(namaMenu.getText().toString(),Integer.parseInt(hargaMenu.getText().toString()),deskripsiMenu.getText().toString());
-//            Gson gson = new Gson();
+            if (typeDetail.equals("detail")){
+                dataMenu1 = new DataMenu(dataMenu.getId(),namaMenu.getText().toString(), Integer.parseInt(hargaMenu.getText().toString()), deskripsiMenu.getText().toString());
+            }else {
+                dataMenu1 = new DataMenu(namaMenu.getText().toString(), Integer.parseInt(hargaMenu.getText().toString()), deskripsiMenu.getText().toString());
+            }
+            //            Gson gson = new Gson();
 //            Log.i(TAG, "inputDataKamar: "+gson.toJson(dataMenu));
             DataMenuService dataMenuService = APIClient.getClient().create(DataMenuService.class);
-            dataMenuService.postDataMenu("Bearer "+token,dataMenu).enqueue(new Callback<ResponseBody>() {
+            dataMenuService.postDataMenu("Bearer "+token,dataMenu1).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
@@ -267,6 +297,11 @@ public class DetailDataActivity extends AppCompatActivity {
         namaLaundry = (TextInputEditText) findViewById(R.id.et_nama_laundry);
         hargaLaundry = (TextInputEditText) findViewById(R.id.et_harga_laundry);
         deskripsiLaundry = (TextInputEditText) findViewById(R.id.et_deskripsi_laundry);
+        if (typeDetail.equals("detail")){
+            namaLaundry.setText(dataLaundry.getNama());
+            hargaLaundry.setText(String.valueOf(dataLaundry.getHarga()));
+            deskripsiLaundry.setText(dataLaundry.getDeskripsi());
+        }
         tampilDialog.dismissLoading();
     }
     public boolean validasiDataLaundry(){
@@ -277,17 +312,21 @@ public class DetailDataActivity extends AppCompatActivity {
         }
     }
     public void inputDataLaundry(){
+        DataLaundry dataLaundry1;
         if (validasiDataLaundry()){
 //            kalau kosong muncul alert
             tampilDialog.showDialog(getString(R.string.dialog_title_failed),getString(R.string.dialog_message_4));
         }else {
 //            kalau tidak kosong maka lanjutkan input data
-
-            DataLaundry dataLaundry = new DataLaundry(namaLaundry.getText().toString(),Integer.parseInt(hargaLaundry.getText().toString()),deskripsiLaundry.getText().toString());
+            if (typeDetail.equals("detail")) {
+                dataLaundry1 = new DataLaundry(dataLaundry.getId(),namaLaundry.getText().toString(), Integer.parseInt(hargaLaundry.getText().toString()), deskripsiLaundry.getText().toString());
+            }else {
+                dataLaundry1 = new DataLaundry(namaLaundry.getText().toString(), Integer.parseInt(hargaLaundry.getText().toString()), deskripsiLaundry.getText().toString());
+            }
             Gson gson = new Gson();
             Log.i(TAG, "inputDataKamar: "+gson.toJson(dataLaundry));
             DataLaundryService dataLaundryService = APIClient.getClient().create(DataLaundryService.class);
-            dataLaundryService.postDataLaundry("Bearer "+token,dataLaundry).enqueue(new Callback<ResponseBody>() {
+            dataLaundryService.postDataLaundry("Bearer "+token,dataLaundry1).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
@@ -316,6 +355,11 @@ public class DetailDataActivity extends AppCompatActivity {
         namaOthers = (TextInputEditText) findViewById(R.id.et_nama_others);
         hargaOthers = (TextInputEditText) findViewById(R.id.et_harga_others);
         deskripsiOthers = (TextInputEditText) findViewById(R.id.et_deskripsi_others);
+        if (typeDetail.equals("detail")){
+            namaOthers.setText(dataOthers.getNama());
+            hargaOthers.setText(String.valueOf(dataOthers.getHarga()));
+            deskripsiOthers.setText(dataOthers.getDeskripsi());
+        }
         tampilDialog.dismissLoading();
     }
     public boolean validasiDataOthers(){
@@ -326,17 +370,21 @@ public class DetailDataActivity extends AppCompatActivity {
         }
     }
     public void inputDataOthers(){
+        DataOthers dataOthers1;
         if (validasiDataOthers()){
 //            kalau kosong muncul alert
             tampilDialog.showDialog(getString(R.string.dialog_title_failed),getString(R.string.dialog_message_4));
         }else {
 //            kalau tidak kosong maka lanjutkan input data
-
-            DataOthers dataOthers = new DataOthers(namaOthers.getText().toString(),Integer.parseInt(hargaOthers.getText().toString()),deskripsiOthers.getText().toString());
+            if(typeDetail.equals("detail")) {
+                dataOthers1 = new DataOthers(dataOthers.getId(),namaOthers.getText().toString(), Integer.parseInt(hargaOthers.getText().toString()), deskripsiOthers.getText().toString());
+            }else {
+                dataOthers1 = new DataOthers(namaOthers.getText().toString(), Integer.parseInt(hargaOthers.getText().toString()), deskripsiOthers.getText().toString());
+            }
             Gson gson = new Gson();
             Log.i(TAG, "inputDataKamar: "+gson.toJson(dataOthers));
             DataOthersService dataOthersService = APIClient.getClient().create(DataOthersService.class);
-            dataOthersService.postDataOthers("Bearer "+token,dataOthers).enqueue(new Callback<ResponseBody>() {
+            dataOthersService.postDataOthers("Bearer "+token,dataOthers1).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
@@ -362,18 +410,31 @@ public class DetailDataActivity extends AppCompatActivity {
 //    Submit Data
     @OnClick(R.id.btn_simpan_data_manajemen)
     public void save(){
-        if (typeDetail.equals(getString(R.string.tambah_data))) {
-            if (menu.equals(getString(R.string.manajemen_1))) {
-                inputDataKamar();
-            }else if (menu.equals(getString(R.string.manajemen_2))) {
-                inputDataMenu();
-            }else if (menu.equals(getString(R.string.manajemen_3))) {
-                inputDataLaundry();
-            }else if (menu.equals(getString(R.string.manajemen_4))) {
-                inputDataOthers();
-            }else {
-                tampilDialog.showDialog(getString(R.string.dialog_title_failed),getString(R.string.manajemen_3));
-            }
+        if (menu.equals(getString(R.string.manajemen_1))) {
+            inputDataKamar();
+        }else if (menu.equals(getString(R.string.manajemen_2))) {
+            inputDataMenu();
+        }else if (menu.equals(getString(R.string.manajemen_3))) {
+            inputDataLaundry();
+        }else if (menu.equals(getString(R.string.manajemen_4))) {
+            inputDataOthers();
+        }else {
+            tampilDialog.showDialog(getString(R.string.dialog_title_failed),getString(R.string.manajemen_3));
+        }
+    }
+
+    @OnClick(R.id.btn_hapus_data_manajemen)
+    public void hapusData(){
+        if (menu.equals(getString(R.string.manajemen_1))) {
+//            tampilDialog.showValidate("Information","Apakah anda yakin akan menghapus ini?",dat);
+        }else if (menu.equals(getString(R.string.manajemen_2))) {
+            tampilDialog.showValidate("Information","Apakah anda yakin akan menghapus ini?",dataMenu.getId(),getString(R.string.manajemen_2));
+        }else if (menu.equals(getString(R.string.manajemen_3))) {
+            tampilDialog.showValidate("Information","Apakah anda yakin akan menghapus ini?",dataLaundry.getId(),getString(R.string.manajemen_3));
+        }else if (menu.equals(getString(R.string.manajemen_4))) {
+            tampilDialog.showValidate("Information","Apakah anda yakin akan menghapus ini?",dataOthers.getId(),getString(R.string.manajemen_4));
+        }else {
+            tampilDialog.showDialog(getString(R.string.dialog_title_failed),getString(R.string.manajemen_3));
         }
     }
 

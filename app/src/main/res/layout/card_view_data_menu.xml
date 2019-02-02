@@ -8,6 +8,7 @@
         android:padding="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/cd_data_menu"
         android:clickable="true"
         android:focusable="true"
         android:orientation="vertical">

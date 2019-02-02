@@ -1,13 +1,17 @@
 package com.macbook.puritomat.adapter;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.macbook.puritomat.R;
+import com.macbook.puritomat.activity.DetailDataActivity;
 import com.macbook.puritomat.model.DataOthers;
 import com.macbook.puritomat.model.DataOthers;
 
@@ -18,11 +22,15 @@ public class RecyclerViewAdapterOthers extends RecyclerView.Adapter<RecyclerView
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView namaOthers, hargaOthers;
+        public LinearLayout cdData;
+        public View mView;
 
         public MyViewHolder(View view) {
             super(view);
+            mView = view;
             namaOthers = (TextView) view.findViewById(R.id.tx_nama_others);
             hargaOthers = (TextView) view.findViewById(R.id.tx_harga_others);
+            cdData = (LinearLayout) view.findViewById(R.id.cd_data_others);
         }
     }
 
@@ -39,12 +47,24 @@ public class RecyclerViewAdapterOthers extends RecyclerView.Adapter<RecyclerView
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        DataOthers dataOthers = dataOthersArrayList.get(position);
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
+        final DataOthers dataOthers = dataOthersArrayList.get(position);
         Log.i("Testing", "onBindViewHolder: "+dataOthers.getNama());
 
         holder.namaOthers.setText(dataOthers.getNama());
         holder.hargaOthers.setText("Rp. "+String.valueOf(dataOthers.getHarga()));
+        holder.cdData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(holder.mView.getContext(), DetailDataActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("menu",holder.mView.getContext().getString(R.string.manajemen_4));
+                intent.putExtra("typeDetail","detail");
+                Gson gson = new Gson();
+                intent.putExtra("data",gson.toJson(dataOthers));
+                holder.mView.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override
