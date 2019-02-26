@@ -120,13 +120,76 @@ public class DetailDataActivity extends AppCompatActivity {
                 View inflated = stub.inflate();
                 dataOthers = gson.fromJson(extras.getString("data"),DataOthers.class);
                 contentDataOthers();
+            }else if (menu.equals("tipe-kamar")){
+//                Toast.makeText(this, "tipe-kamar", Toast.LENGTH_SHORT).show();
+                setTitle(typeDetail+" "+getString(R.string.manajemen_1));
+                stub.setLayoutResource(R.layout.detail_data_tipe_kamar);
+                View inflated = stub.inflate();
+                contentDataTipeKamar();
             }else {
                 Toast.makeText(this, "Failed to render", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-//    Data Kamar
+//    Tipe Kamar
+TextInputEditText tipeKamar;
+    TextInputEditText hargaKamar;
+private void contentDataTipeKamar() {
+    tipeKamar = (TextInputEditText) findViewById(R.id.et_tipe_kamar);
+    hargaKamar = (TextInputEditText) findViewById(R.id.et_harga_kamar);
+
+    // getDataTipeKamar
+    if (token != null){
+
+        tampilDialog.dismissLoading();
+    }
+}
+    public boolean validasiDataTipeKamar(){
+        if (tipeKamar.getText().toString().equals("")|| hargaKamar.getText().toString().equals("")){
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public void inputDataTipeKamar(){
+        if (validasiDataTipeKamar()){
+//            kalau kosong muncul alert
+            tampilDialog.showDialog(getString(R.string.dialog_title_failed),getString(R.string.dialog_message_4));
+        }else {
+//            kalau tidak kosong maka lanjutkan input data
+            if (token != null){
+                TipeKamar tipeKamar1 = new TipeKamar(tipeKamar.getText().toString(),Integer.parseInt(hargaKamar.getText().toString()));
+//                Gson gson = new Gson();
+//                Log.i(TAG, "inputDataKamar: "+gson.toJson(kamar));
+                DataKamarService dataKamarService = APIClient.getClient().create(DataKamarService.class);
+                dataKamarService.postDataTipeKamar("Bearer "+token,tipeKamar1).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (response.isSuccessful()) {
+                            tampilDialog.showDialog(getString(R.string.dialog_title_success), getString(R.string.dialog_message_1));
+                            Intent intent = new Intent(DetailDataActivity.this, ListDataManajemenActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("menu",getString(R.string.manajemen_1));
+                            startActivity(intent);
+                        }else {
+                            tampilDialog.showDialog(getString(R.string.dialog_title_failed),getString(R.string.dialog_message_2));
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        tampilDialog.showDialog(getString(R.string.dialog_title_failed),t.getMessage());
+                    }
+                });
+            }
+        }
+    }
+
+
+    //    Data Kamar
     Spinner spinner;
     TextInputEditText nomorKamar;
     ArrayList<TipeKamar> tipeKamars;
@@ -186,6 +249,7 @@ public class DetailDataActivity extends AppCompatActivity {
             });
         }
     }
+
 
 //    Data Kamar
     public boolean validasiDataKamar(){
@@ -418,6 +482,8 @@ public class DetailDataActivity extends AppCompatActivity {
             inputDataLaundry();
         }else if (menu.equals(getString(R.string.manajemen_4))) {
             inputDataOthers();
+        }else if (menu.equals("tipe-kamar")) {
+            inputDataTipeKamar();
         }else {
             tampilDialog.showDialog(getString(R.string.dialog_title_failed),getString(R.string.manajemen_3));
         }

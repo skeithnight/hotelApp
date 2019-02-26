@@ -18,6 +18,11 @@ public class TipeKamar {
     @Expose
     private String deskripsi;
 
+    public TipeKamar(String nama, Integer harga) {
+        this.nama = nama;
+        this.harga = harga;
+    }
+
     public String getId() {
         return id;
     }

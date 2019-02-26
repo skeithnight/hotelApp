@@ -22,4 +22,7 @@ public interface DataKamarService {
 
     @POST("kamar")
     Call<ResponseBody> postDataKamar(@Header("Authorization") String token, @Body Kamar kamar);
+
+    @POST("tipe-kamar")
+    Call<ResponseBody> postDataTipeKamar(@Header("Authorization") String token, @Body TipeKamar tipeKamar);
 }

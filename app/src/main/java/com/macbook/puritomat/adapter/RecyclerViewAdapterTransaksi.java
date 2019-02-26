@@ -54,10 +54,14 @@ public class RecyclerViewAdapterTransaksi extends RecyclerView.Adapter<RecyclerV
     public void onBindViewHolder(RecyclerViewAdapterTransaksi.MyViewHolder holder, int position) {
         final Transaksi transaksi = transaksiArrayList.get(position);
 
-        holder.namaTamu.setText(transaksi.getTamu().getNama());
-        holder.jumlahKamar.setText(String.valueOf(transaksi.getKamar().size()));
-        holder.waktuTransaksi.setText(String.valueOf(transaksi.getKamar().get(0).getFrom()));
-        holder.status.setText(transaksi.getStatus());
+        String nama = transaksi.getTamu() == null?"-":transaksi.getTamu().getNama();
+        int size = transaksi.getKamar() == null ?0:transaksi.getKamar().size();
+        long waktutransaksi = transaksi.getKamar() == null?0:transaksi.getKamar().get(0).getFrom();
+        String status = transaksi.getStatus() == null?"-":transaksi.getStatus();
+        holder.namaTamu.setText(nama);
+        holder.jumlahKamar.setText(String.valueOf(size));
+        holder.waktuTransaksi.setText(String.valueOf(waktutransaksi));
+        holder.status.setText(status);
         holder.cvTransaksi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

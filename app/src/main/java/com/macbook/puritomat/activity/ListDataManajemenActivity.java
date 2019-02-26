@@ -1,8 +1,10 @@
 package com.macbook.puritomat.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -271,14 +273,42 @@ public class ListDataManajemenActivity extends AppCompatActivity {
         }
     }
 
-
+    private AlertDialog myDialog;
+    private String[] items = {"Jenis Kamar","Nomor Kamar"};
     @OnClick(R.id.fab_listDataManajemen)
     public void onClickFAB(View view){
+        if (menu.equals(getString(R.string.manajemen_1))){
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Pilih tambah data");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (which == 0){
+                        changeScreen("tipe-kamar");
+                    }else {
+                        changeScreen(menu);
+                    }
+                }
+            });
+
+
+            builder.setCancelable(false);
+            myDialog = builder.create();
+            myDialog.show();
+
+        }else {
+            changeScreen(menu);
+        }
+//        Toast.makeText(this, String.valueOf(view.getId())+" : "+menu, Toast.LENGTH_SHORT).show();
+    }
+
+    private void changeScreen(String menu){
         Intent intent = new Intent(this, DetailDataActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("menu",menu);
-        intent.putExtra("typeDetail",getString(R.string.tambah_data));
+        intent.putExtra("menu", menu);
+        intent.putExtra("typeDetail", getString(R.string.tambah_data));
         startActivity(intent);
-//        Toast.makeText(this, String.valueOf(view.getId())+" : "+menu, Toast.LENGTH_SHORT).show();
     }
 }
